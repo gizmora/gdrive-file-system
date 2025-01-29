@@ -1,0 +1,21 @@
+<script>
+
+  function loadRoot() {
+    google.script.run.withSuccessHandler((data) => {
+      console.log({data});
+      const mainDiv = document.getElementById('main');
+      let fileList = document.createElement('ul');
+      let item = '';
+
+      data.forEach((file) => {
+        item += `<li class="level ${file.type}">${file.name}</li>`;
+      });
+
+      fileList.innerHTML = item;
+
+      mainDiv.appendChild(fileList);
+    }).getRootList();
+  }
+
+  loadRoot();
+</script>
