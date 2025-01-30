@@ -17,64 +17,103 @@ function getRootList() {
 
   while (folders.hasNext()) {
     let curr = folders.next();
+    let mimeType = 'folder';
     
-    console.log(curr.getName());
     items.push({
       type: 'folder',
       name: curr.getName(),
-      level: 0,
-      contents: getFolderContents(curr)
+      treeLevel: 0,
+      mimeType: mimeType,
+      mimeClass: getIconClass(mimeType),
+      id: curr.getId(),
+      // lastUpdated: curr.getLastUpdated()
     })
   }
 
   while (files.hasNext()) {
     let curr = files.next();
+    let mimeType = curr.getMimeType();
 
-    console.log(curr.getName());
     items.push({
       type: 'file',
       name: curr.getName(),
-      level: 0,
-      mimeType: curr.getMimeType()
+      treeLevel: 0,
+      mimeType: mimeType,
+      mimeClass: getIconClass(mimeType),
+      id: curr.getId(),
+      // lastUpdated: curr.getLastUpdated()
     })
   }
+
+  console.log(items)
 
   return items;
 }
 
-function getFolderContents(folder, level = 1) {
+function getFolderContents(fileId, treeLevel = 1) {
+  const folder = DriveApp.getFolderById(fileId);
   const files = folder.getFiles();
   const folders = folder.getFolders();
   const contents = [];
 
   while (folders.hasNext()) {
     let currFolder = folders.next();
-    let folderContents = getFolderContents(currFolder, level + 1);
+    let mimeType = 'folder';
+    // let folderContents = getFolderContents(currFolder, treeLevel + 1);
 
     contents.push ({
       type: 'folder',
       name: currFolder.getName(),
-      contents: folderContents,
-      level: level
+      treeLevel: treeLevel,
+      mimeType: mimeType,
+      mimeClass: getIconClass(mimeType),
+      id: currFolder.getId(),
     });
     
-    // console.log('-'.repeat(level) + '[folder]' + currFolder.getName());
   }
 
   while (files.hasNext()) {
     let currFile = files.next();
+    let mimeType = currFile.getMimeType();
 
     contents.push ({
       type: 'file',
       name: currFile.getName(),
-      level: level,
-      mimeType: currFile.getMimeType()
+      treeLevel: treeLevel,
+      mimeType: mimeType,
+      mimeClass: getIconClass(mimeType),
+      id: currFile.getId(),
     });
 
-    // console.log('-'.repeat(level) + currFile.getName());
   }
 
-
-  console.log(contents)
   return contents;
+}
+
+function getIconClass(mimeType) {
+  const mimeTypeLookup = {
+    'image/jpeg': 'image',
+    'image/png': 'image',
+    'image/gif': 'image',
+    'image/bmp': 'image',
+    'image/svg+xml': 'image',
+    'video/mp4': 'movie',
+    'video/x-msvideo': 'movie',
+    'video/quicktime': 'movie',
+    'video/webm': 'movie',
+    'audio/mpeg': 'music_note',
+    'audio/wav': 'music_note',
+    'audio/ogg': 'music_note',
+    'application/pdf': 'picture_as_pdf',
+    'application/msword': 'description',
+    'application/vnd.ms-excel': 'list_alt',
+    'application/vnd.ms-powerpoint': 'analytics',
+    'application/vnd.google-apps.document': 'article',
+    'application/vnd.google-apps.spreadsheet': 'list_alt',
+    'application/vnd.google-apps.presentation': 'analytics',
+    'folder': 'folder',
+    'others': 'text_snippet'
+  };
+
+  return mimeTypeLookup[mimeType] ? mimeTypeLookup[mimeType] : mimeTypeLookup['others'];
 }
