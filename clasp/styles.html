@@ -1,18 +1,31 @@
 <style>
-  ul {
-    list-style: none;
-    padding: 0px;
-  }
 
   .level {
-    display: flex;
-    padding-left: 14px;
-    align-items: center;
+    padding: 4px 0px 0px 12px;
     position: relative;
+  }
+
+  .level:hover {
+    cursor: pointer;
   }
 
   .level span.material-icons {
     padding-right: 8px;
-    font-size: 20px
+    font-size: 20px;
   }
+
+  .level > span {
+    display: flex;
+    pointer-events: none; 
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .folder-contents {
+    border-left: solid 1px #e0e0e0;
+    margin-left: 8px;
+  }
+
 </style>
