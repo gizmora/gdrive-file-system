@@ -6,17 +6,11 @@
         google.script.run.withSuccessHandler((data) => {
           console.log({data});
           const mainDiv = document.getElementById('main');
-          let fileList = document.createElement('ul');
+          let fileList = document.createElement('div');
           fileList.id = 'file-tree';
-          let item = '';
-
-          data.forEach((file) => {
-            let label = `<span class="material-icons ${file.mimeClass}">${file.mimeClass}</span>`;
-            item += `<li class="level collapsed ${file.type}" data-file-id="${file.id}" data-tree-level="${file.treeLevel}">${label + file.name}</li>`;
-          });
+          let item = _self.createFolderContents(data);
 
           fileList.innerHTML = item;
-
           mainDiv.appendChild(fileList);
           _self.setOnClickHandler();
         }).getRootList();
@@ -30,14 +24,24 @@
           const target = event.target;
           const fileId = target.dataset.fileId;
 
-          if (target.classList.contains('folder')) {
+          if (target.matches('div.folder')) {
             const treeLevel = target.dataset.treeLevel;
             const isExpanded = target.classList.contains('expanded');
-            const folderCotents = target.querySelector('.folder-contents');
+            const folderContents = target.querySelector('.folder-contents');
             target.classList.toggle('collapsed');
             target.classList.toggle('expanded');
 
-            _self.getChildrenFiles(fileId,treeLevel);
+            if (isExpanded) {
+              if (folderContents) {
+                folderContents.classList.add('hidden');
+              }
+            } else {
+              if (folderContents) {
+                folderContents.classList.remove('hidden');
+              } else {
+                _self.getChildrenFiles(fileId, treeLevel);
+              }
+            }
 
             console.log('Folder clicked', fileId);
             event.stopPropagation();
@@ -49,12 +53,36 @@
       },
 
       getChildrenFiles(fileId, treeLevel) {
+        const _self = this;
+
         google.script.run.withSuccessHandler((data) => {
           console.log({data});
+          const childTree = document.createElement('div');
+          const parent = document.querySelector(`[data-file-id="${fileId}"]`);
+          childTree.classList.add('folder-contents');
           
+          let item = _self.createFolderContents(data);
+          childTree.innerHTML = item;
+
+          parent.appendChild(childTree);
         }).getFolderContents(fileId,treeLevel);
+      },
+
+      createFolderContents(data) {
+        let item = '';
+
+        data.forEach((file) => {
+          let label = `<span class="material-icons ${file.mimeClass}">${file.mimeClass}</span>`;
+          item += `<div class="level collapsed ${file.type}" data-file-id="${file.id}" data-tree-level="${file.treeLevel}">
+              <span>${label + file.name}</span>
+          </div>`;
+        });
+
+        return item;
       }
     };
+
+    
 
     FILE_SYSTEM.loadRoot();
   })();
