@@ -1,0 +1,14 @@
+File Tree:
+  ☐ Onclick
+    ✔ Folder @done(25-02-07 21:47)
+    ☐ File
+  ✔ Hover @done(25-02-07 21:45)
+    ✔ Folder @done(25-02-07 21:45)
+    ✔ File @done(25-02-07 21:45)
+
+
+Fix:
+  ✔ Tree level always zero @done(25-02-06 21:31)
+    ✔ Tree level becomes string instead of int @done(25-02-07 21:45)
+  ✔ Child blocking click event @done(25-02-06 21:31)
+  ☐ Double clicking event

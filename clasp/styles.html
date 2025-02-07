@@ -1,5 +1,4 @@
 <style>
-
   .level {
     padding: 4px 0px 0px 0px;
   }
@@ -81,22 +80,22 @@
     font-size: 12px;
   }
 
-  li.folder.expanded[data-loading="false"]::before { /* Combined selector */
+  li.folder.expanded[data-loading="false"]::before {
     content: "^";
     transform: rotate(180deg);
     font-size: 14px;
   }
 
-  li.folder:hover::before { /* Style for hover on collapsed folders */
-    content: ">"; /* Ensure it's the right arrow */
+  li.folder:hover::before {
+    content: ">";
   }
 
   li.folder >.folder-contents {
-    isolation: isolate; /* Key property */
+    isolation: isolate;
   }
 
   li.file:hover {
-    background-color: lightblue; /* Or different color for files */
+    background-color: lightblue;
   }
 
   ul {
@@ -125,5 +124,4 @@
         transform: rotate(360deg);
     }
   } 
-
 </style>
