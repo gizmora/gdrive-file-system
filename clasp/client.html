@@ -6,12 +6,12 @@
         google.script.run.withSuccessHandler((data) => {
           console.log({data});
           const mainDiv = document.getElementById('main');
-          let fileList = document.createElement('div');
-          fileList.id = 'file-tree';
+          let fileTree = document.createElement('ul');
+          fileTree.id = 'file-tree';
           let item = _self.createFolderContents(data);
 
-          fileList.innerHTML = item;
-          mainDiv.appendChild(fileList);
+          fileTree.innerHTML = item;
+          mainDiv.appendChild(fileTree);
           _self.setOnClickHandler();
         }).getRootList();
       },
@@ -21,34 +21,45 @@
         const fileTree = document.getElementById('file-tree');
 
         fileTree.addEventListener('click', function(event) {
-          const target = event.target;
-          const fileId = target.dataset.fileId;
+          const li = event.target.closest('li');
 
-          if (target.matches('div.folder')) {
-            const treeLevel = target.dataset.treeLevel;
-            const isExpanded = target.classList.contains('expanded');
-            const folderContents = target.querySelector('.folder-contents');
-            target.classList.toggle('collapsed');
-            target.classList.toggle('expanded');
+          if (li) {
+            const fileId = li.dataset.fileId;
+            const treeLevelAtt = li.dataset.treeLevel;
+            const treeLevel = isNaN(parseInt(treeLevelAtt, 10)) ? 0 : parseInt(treeLevelAtt);
 
-            if (isExpanded) {
-              if (folderContents) {
-                folderContents.classList.add('hidden');
-              }
-            } else {
-              if (folderContents) {
-                folderContents.classList.remove('hidden');
+            if (li.classList.contains('folder')) {
+              const isExpanded = li.classList.contains('expanded');
+              const folderContents = li.querySelector('.folder-contents');
+              li.classList.toggle('collapsed');
+              li.classList.toggle('expanded');
+
+              if (isExpanded) {
+                if (folderContents) {
+                  folderContents.classList.add('hidden');
+                }
               } else {
-                _self.getChildrenFiles(fileId, treeLevel);
+                if (folderContents) {
+                  folderContents.classList.remove('hidden');
+                } else {
+                  li.dataset.loading = 'true';
+                  const loader = li.querySelector('.loader');
+
+                  if (loader) { 
+                    loader.style.display = 'inline-block';
+                  }
+                  _self.getChildrenFiles(fileId, treeLevel+1);
+                }
               }
+
+              console.log('Folder clicked', fileId);
+            } else if (li.classList.contains('file')) {
+              console.log('File opened', fileId);
             }
 
-            console.log('Folder clicked', fileId);
-            event.stopPropagation();
-          } else if (target.classList.contains('file')) {
-            console.log('File opened', fileId);
             event.stopPropagation();
           }
+          
         })
       },
 
@@ -57,7 +68,7 @@
 
         google.script.run.withSuccessHandler((data) => {
           console.log({data});
-          const childTree = document.createElement('div');
+          const childTree = document.createElement('ul');
           const parent = document.querySelector(`[data-file-id="${fileId}"]`);
           childTree.classList.add('folder-contents');
           
@@ -65,6 +76,12 @@
           childTree.innerHTML = item;
 
           parent.appendChild(childTree);
+          parent.dataset.loading = 'false';
+          const loader = parent.querySelector('.loader');
+
+          if (loader) { 
+            loader.style.display = 'none';
+          }
         }).getFolderContents(fileId,treeLevel);
       },
 
@@ -73,9 +90,9 @@
 
         data.forEach((file) => {
           let label = `<span class="material-icons ${file.mimeClass}">${file.mimeClass}</span>`;
-          item += `<div class="level collapsed ${file.type}" data-file-id="${file.id}" data-tree-level="${file.treeLevel}">
-              <span>${label + file.name}</span>
-          </div>`;
+          item += `<li class="level collapsed ${file.type}" data-file-id="${file.id}" data-tree-level="${file.treeLevel}" data-loading="false">
+              <span>${label}<span class="filename">${file.name}</span><span class="loader"></span></span>
+          </li>`;
         });
 
         return item;

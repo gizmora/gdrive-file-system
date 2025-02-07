@@ -1,8 +1,7 @@
 <style>
 
   .level {
-    padding: 4px 0px 0px 12px;
-    position: relative;
+    padding: 4px 0px 0px 0px;
   }
 
   .level:hover {
@@ -34,18 +33,97 @@
     color: #34a853;
   }
 
-  .level > span {  
+  .level > span {
     display: flex;
-    pointer-events: none; 
   }
 
-  .hidden {
-    display: none;
+  .level.folder > span {  
+    padding-left: 20px;
+  }
+
+  .level.file > span {
+    padding-left: 6px;
   }
 
   .folder-contents {
     border-left: solid 1px #e0e0e0;
-    margin-left: 8px;
+    margin: 0px 13px;
+    display: none;
   }
+
+  .folder.expanded > .folder-contents {
+    display: block;
+  }
+
+  .folder.collapsed > .folder-contents {
+    display: none;
+  }
+
+  .folder[data-loading="true"] .folder-contents {
+    display: none;
+  }
+
+  li {
+    list-style: none;
+    transition: background-color 0.2s ease; 
+  }
+
+  li.folder { 
+    position: relative; 
+  }
+
+  li.folder::before {
+    content: ">";
+    position: absolute;
+    left: 10px;
+    top: 6px;
+    transition: transform 0.2s ease;
+    font-size: 12px;
+  }
+
+  li.folder.expanded[data-loading="false"]::before { /* Combined selector */
+    content: "^";
+    transform: rotate(180deg);
+    font-size: 14px;
+  }
+
+  li.folder:hover::before { /* Style for hover on collapsed folders */
+    content: ">"; /* Ensure it's the right arrow */
+  }
+
+  li.folder >.folder-contents {
+    isolation: isolate; /* Key property */
+  }
+
+  li.file:hover {
+    background-color: lightblue; /* Or different color for files */
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  .loader {
+    width: 12px;
+    height: 12px;
+    border: 1px solid black;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: none;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin-top: 4px;
+    margin-left: 6px;
+  }
+
+  @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+  } 
 
 </style>
