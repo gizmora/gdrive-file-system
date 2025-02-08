@@ -81,9 +81,7 @@
   }
 
   li.folder.expanded[data-loading="false"]::before {
-    content: "^";
-    transform: rotate(180deg);
-    font-size: 14px;
+    transform: rotate(90deg);
   }
 
   li.folder:hover::before {
@@ -123,5 +121,43 @@
     100% {
         transform: rotate(360deg);
     }
-  } 
+  }
+
+  .lato-regular {
+    font-family: "Lato", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .lato-bold {
+    font-family: "Lato", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  div#main {
+    margin: 40px auto 0px;
+    width: 800px;
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  header { 
+    width: 800px;
+    margin: auto;
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+  }
+
+  h1 > span.material-icons {
+    font-size: 35px;
+    margin-left: 15px;
+  }
+
 </style>

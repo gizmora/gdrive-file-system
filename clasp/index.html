@@ -3,10 +3,15 @@
   <head>
     <base target="_top">
     <?!= include('styles'); ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
-    <h1>Google Drive File Tree</h1>
+    <header>
+      <h1 class="lato-regular">Google Drive File Tree <span class="material-icons">account_tree</span></h1>
+    </header>
     <div id="main"></div>
     <?!= include('client'); ?>
   </body>
