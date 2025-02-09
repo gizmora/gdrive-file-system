@@ -136,28 +136,43 @@
   }
 
   div#main {
-    margin: 40px auto 0px;
+    margin: 12px auto 0px;
     width: 800px;
     font-family: "Lora", serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    border: solid 1px #e0e0e0;
+    border-radius: 3px;
+    padding: 40px 20px;
   }
 
   header { 
     width: 800px;
     margin: auto;
+    display: flex;
+    align-items: center;
   }
 
   h1 {
     display: flex;
     align-items: center;
-    margin-bottom: 0px;
+    margin: 0px;
   }
 
   h1 > span.material-icons {
     font-size: 35px;
     margin-left: 15px;
+  }
+
+  div#search-bar {
+    margin-left: 24px;
+  }
+
+  input#search {
+    min-height: 16px;
+    padding: 6px 12px;
+    width: 300px;
   }
 
 </style>
